@@ -1,9 +1,10 @@
 import scala.collection.immutable.BitSet
 import scala.util.hashing.ByteswapHashing
 
+/**
+ * An implementation of a immutable bloom filter.
+ */
 class ImmutableBloomFilter(numHashFunctions: Int, numBits: Int, val bitset: BitSet = BitSet()) extends BaseBloomFilter(numHashFunctions, numBits) {
-    // TODO Tests
-
     /**
      * Adds a new word to this Bloom filter in an immutable manner.
      */

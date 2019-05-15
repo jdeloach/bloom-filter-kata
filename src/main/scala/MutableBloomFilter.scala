@@ -2,9 +2,11 @@ import scala.collection.mutable.BitSet
 import scala.util.hashing.MurmurHash3
 import scala.util.hashing.ByteswapHashing
 
+/**
+ * An implementation of a mutable bloom filter.
+ */
 class MutableBloomFilter(numHashFunctions: Int = 2, numBits: Int = 1024*1024) extends BaseBloomFilter(numHashFunctions, numBits) {
     var internalSet = BitSet()
-    // TODO Tests
 
     /**
      * Adds a new word to this Bloom filter in an mutable manner.

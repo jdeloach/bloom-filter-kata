@@ -3,8 +3,8 @@ import scala.util.Random
 
 object Main {
   def main(args: Array[String]) = {
-    val bits = 2*1024*1024
-    val numHashes = 3
+    val bits = 2*1024*1024 // 2MB
+    val numHashes = 3 // And 3 hashes, targets ~5% FP rate
     val filename = "wordlist.txt"
     val words = Source.fromFile(filename).getLines.toArray.map(_.toUpperCase())
 
