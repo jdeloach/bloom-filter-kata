@@ -2,10 +2,7 @@ import scala.collection.immutable.BitSet
 import scala.util.hashing.MurmurHash3
 import scala.util.hashing.ByteswapHashing
 
-class BloomFilter(numHashFunctions: Int = 2, numBits: Int = 1024*1024) {
-    // probably should get lower than BitSet
-    var internalSet = BitSet()
-
+class ImmutableBloomFilter(numHashFunctions: Int = 2, numBits: Int = 1024*1024, val bitset: BitSet = BitSet()) {
     // TODO Handle < 1 Hash Functions
     // TODO Docs
     // TODO Tests
@@ -18,12 +15,17 @@ class BloomFilter(numHashFunctions: Int = 2, numBits: Int = 1024*1024) {
     }
 
     def add(word: String) = {
-        internalSet = internalSet ++ combinedHash(word)
+        new ImmutableBloomFilter(numHashFunctions, numBits, bitset ++ combinedHash(word))
     }
 
     def test(word: String) : Boolean = {
         combinedHash(word)
-            .map(idx => internalSet(idx))
+            .map(idx => bitset(idx))
             .reduce(_ && _)
+    }
+
+    def ++(that: ImmutableBloomFilter) : ImmutableBloomFilter = {
+        // what if types are different
+        new ImmutableBloomFilter(numHashFunctions, numBits, bitset ++ that.bitset)
     }
 }
