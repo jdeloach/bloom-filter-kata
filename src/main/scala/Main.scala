@@ -5,8 +5,9 @@ object Main {
   def main(args: Array[String]) = {
     val bits = 2*1024*1024 // 2MB
     val numHashes = 3 // And 3 hashes, targets ~5% FP rate
-    val filename = "wordlist.txt"
-    val words = Source.fromFile(filename).getLines.toArray.map(_.toUpperCase())
+    val wordlistFile = "wordlist.txt"
+    val words = Source.fromFile(wordlistFile).getLines.toArray.map(_.toUpperCase())
+    val toCheck = Source.fromFile("validatelist.txt").getLines.toArray.map(_.toUpperCase())
 
     val filter = constructMutableFilter(words, numHashes, bits)
 
@@ -24,7 +25,13 @@ object Main {
 
     // Experimental should trend to theoreitcal rate as number of test random words increases
     println(s"Experimental FP Rate: ${100*(estimatedPositives - actualPositives.length) / testRandomWords.toDouble}%")
-    println(s"Theoretical FP Rate: ${expectedFalsePositiveRate(words.length, numHashes, bits)}")
+    println(f"Theoretical FP Rate: ${expectedFalsePositiveRate(words.length, numHashes, bits)}%1.1f" + "%")
+
+    val misspelledWords = toCheck.filter(word => !filter.test(word))
+    if (misspelledWords.length > 0)
+      misspelledWords.foreach(w => println(s"Misspelled word: $w"))
+    else
+      println("No misspellings.")
   }
 
   /**
